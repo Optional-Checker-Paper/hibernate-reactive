@@ -7,6 +7,7 @@ plugins {
     id 'nu.studer.credentials' version '2.2'
     id 'org.asciidoctor.jvm.convert' version '3.3.2' apply false
     id 'io.github.gradle-nexus.publish-plugin' version '1.3.0'
+    id 'org.checkerframework' version '0.6.35'
 }
 
 ext {
@@ -115,9 +116,18 @@ nexusPublishing {
     }
 }
 
+repositories {
+    jcenter()
+    mavenCentral()
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+}
+
 subprojects {
     apply plugin: 'java-library'
     apply plugin: 'com.diffplug.spotless'
+    apply plugin: 'org.checkerframework'
 
     // FIXME: Also setting the group and version here otherwise not all tasks will find them
     group = projectGroup
@@ -218,6 +228,11 @@ subprojects {
                 logger.lifecycle "Testing with '${javaLauncher.get().metadata.installationPath}'"
             }
         }
+    }
+    checkerFramework {
+      checkers = [
+        'org.checkerframework.checker.optional.OptionalChecker',
+      ]
     }
 }
 
